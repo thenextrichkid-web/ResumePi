@@ -3,42 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilot Induction | ResumePi_lot™</title>
+    <title>Pilot Registration | ResumePi_lot™</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --core: #00f2ff; --bg: #000105; --brand: #FF4D00; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
-        .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #111b27 0%, #000 100%); z-index: -1; }
-        .container { width: 400px; padding: 50px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 40px; text-align: center; backdrop-filter: blur(20px); }
-        h1 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 4px; color: var(--core); margin-bottom: 30px; }
+        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000105; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        
+        /* Cinematic Background */
+        .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1321 0%, #000 100%); z-index: -1; }
+        .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 60px 60px; transform: perspective(500px) rotateX(60deg); transform-origin: top; animation: moveGrid 20s linear infinite; }
+        @keyframes moveGrid { from { background-position: 0 0; } to { background-position: 0 600px; } }
+
+        /* Navigation */
+        .nav { display: flex; justify-content: center; padding: 30px; width: 100%; box-sizing: border-box; }
+        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-img { width: 40px; height: auto; filter: drop-shadow(0 0 10px var(--core)); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: white; letter-spacing: 3px; }
+
+        /* Form Container */
+        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { 
+            width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 30px; 
+            padding: 50px; text-align: center; backdrop-filter: blur(20px); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 4px; color: var(--core); margin-bottom: 10px; }
+        
         .input-group { text-align: left; margin-bottom: 25px; }
         label { font-family: 'Orbitron'; font-size: 10px; color: #8fa3ad; letter-spacing: 2px; display: block; margin-bottom: 10px; }
-        input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,255,0.2); padding: 15px; border-radius: 12px; color: white; font-family: 'Rajdhani'; font-size: 16px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--core); }
-        .btn-jump { background: var(--core); color: black; border: none; padding: 20px; width: 100%; font-family: 'Orbitron'; font-size: 12px; font-weight: 900; letter-spacing: 3px; border-radius: 14px; cursor: pointer; transition: 0.3s; }
-        .btn-jump:hover { box-shadow: 0 0 30px var(--core); transform: scale(1.02); }
-        #vip-tag { display: none; color: var(--brand); font-family: 'Orbitron'; font-size: 10px; margin-top: 20px; letter-spacing: 1px; border: 1px solid var(--brand); padding: 8px; border-radius: 4px; background: rgba(255, 77, 0, 0.1); }
+        input { 
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,255,0.2); 
+            padding: 15px; border-radius: 12px; color: white; font-family: 'Rajdhani'; 
+            font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--core); background: rgba(0,242,255,0.1); }
+
+        .btn-jump { 
+            background: var(--core); color: black; border: none; padding: 20px; 
+            width: 100%; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; 
+            letter-spacing: 2px; border-radius: 14px; cursor: pointer; transition: 0.3s; 
+        }
+        .btn-jump:hover { box-shadow: 0 0 30px var(--core); transform: translateY(-2px); }
+
+        #vip-tag { 
+            display: none; color: var(--brand); font-family: 'Orbitron'; 
+            font-size: 10px; margin-top: 25px; letter-spacing: 1px; 
+            border: 1px solid var(--brand); padding: 10px; border-radius: 8px; 
+            background: rgba(255, 77, 0, 0.05); 
+        }
+
+        @keyframes moveGrid { from { background-position: 0 0; } to { background-position: 0 600px; } }
     </style>
 </head>
 <body>
-<!-- Inside the .container in onboarding.html -->
-<div class="bg-overlay"></div>
-<div class="container">
-    <h1>PILOT_REGISTRATION</h1>
-    <p style="font-size: 12px; color: #8fa3ad; margin-bottom: 20px;">Create your tactical uplink to begin repair.</p>
-    
-    <div class="input-group">
-        <label>ASSIGN_PILOT_NAME</label>
-        <input type="text" id="userName" placeholder="ENTER IDENTIFIER...">
+    <div class="hero-bg"><div class="grid"></div></div>
+
+    <nav class="nav">
+        <a href="index.html" class="logo-wrap">
+            <img src="pilot-mark.png" alt="Logo" class="logo-img">
+            <div class="logo-text">RESUMEPI_LOT™</div>
+        </a>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>PILOT_REGISTRATION</h1>
+            <p style="font-size: 14px; color: #8fa3ad; margin-bottom: 30px;">Initialize your tactical uplink.</p>
+            
+            <div class="input-group">
+                <label>ASSIGN_PILOT_NAME</label>
+                <input type="text" id="userName" placeholder="ENTER IDENTIFIER...">
+            </div>
+            <div class="input-group">
+                <label>SECURE_UPLINK_EMAIL</label>
+                <input type="email" id="userEmail" placeholder="COMM_CHANNEL@EMAIL.COM">
+            </div>
+            
+            <button class="btn-jump" onclick="beginHyperspace()">CREATE ACCOUNT & INITIALIZE JUMP</button>
+            
+            <div id="vip-tag">RESUMEAI_VIP_STATUS: ACTIVE (₹99 RATE APPLIED)</div>
+        </div>
     </div>
-    <div class="input-group">
-        <label>SECURE_UPLINK_EMAIL</label>
-        <input type="email" id="userEmail" placeholder="COMM_CHANNEL@EMAIL.COM">
-    </div>
-    
-    <button class="btn-jump" onclick="beginHyperspace()">CREATE ACCOUNT & INITIALIZE JUMP</button>
-    <div id="vip-tag">RESUMEAI_VIP_STATUS: ACTIVE (₹99 RATE APPLIED)</div>
-</div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -47,16 +94,22 @@
 
         if (isVIP) {
             document.getElementById('vip-tag').style.display = 'block';
-            if (passedName) document.getElementById('userName').value = decodeURIComponent(passedName);
+            if (passedName) {
+                document.getElementById('userName').value = decodeURIComponent(passedName);
+            }
         }
 
         function beginHyperspace() {
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
-            if(!name || !email) { alert("Credentials required for uplink."); return; }
             
-            // Forward VIP status to payment page
-            let target = isVIP ? `payment.html?amt=99` : `payment.html`;
+            if(!name || !email) { 
+                alert("Pilot name and Secure Email required for uplink."); 
+                return; 
+            }
+
+            // Move to payment. If VIP, keep the amt=99 parameter
+            let target = isVIP ? `payment.html?amt=99&pilot=${encodeURIComponent(name)}` : `payment.html`;
             window.location.href = target;
         }
     </script>
