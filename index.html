@@ -6,62 +6,93 @@
     <title>ResumePi_lot™ | Tactical Career Uplink</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000105; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
+        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000105; --glass: rgba(255, 255, 255, 0.02); }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Atmospheric Grid Background */
         .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1321 0%, #000 100%); z-index: -1; }
         .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 60px 60px; transform: perspective(500px) rotateX(60deg); transform-origin: top; animation: moveGrid 20s linear infinite; }
         @keyframes moveGrid { from { background-position: 0 0; } to { background-position: 0 600px; } }
 
-        /* LOGO STYLES */
-        .nav { display: flex; justify-content: space-between; padding: 30px 60px; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.1); backdrop-filter: blur(10px); }
-        .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--brand), var(--core)); clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%); box-shadow: 0 0 15px var(--core); }
-        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; letter-spacing: 3px; color: white; }
+        /* THE INTEGRATED WINGS LOGO */
+        .nav { display: flex; justify-content: space-between; padding: 25px 60px; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.1); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; }
+        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-img { width: 45px; height: auto; filter: drop-shadow(0 0 10px rgba(0,242,255,0.5)); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: white; letter-spacing: 3px; }
+
+        /* Main Hero Section */
+        .hero { text-align: center; padding: 120px 20px 80px; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(36px, 6vw, 70px); letter-spacing: 12px; margin-bottom: 20px; text-transform: uppercase; }
+        .hero span { color: var(--core); text-shadow: 0 0 30px var(--core); }
+        .tagline { font-size: 22px; color: #8fa3ad; letter-spacing: 2px; max-width: 700px; margin: 0 auto; line-height: 1.6; }
         
-        .hero { text-align: center; padding: 80px 20px; position: relative; }
-        .hero h1 { font-family: 'Orbitron'; font-size: clamp(32px, 5vw, 64px); line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 8px; }
-        .hero span { color: var(--brand); text-shadow: 0 0 20px var(--brand); }
+        .cta-btn { background: transparent; border: 1px solid var(--core); color: var(--core); padding: 25px 60px; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 4px; text-decoration: none; transition: 0.4s; border-radius: 4px; display: inline-block; margin-top: 50px; }
+        .cta-btn:hover { background: var(--core); color: black; box-shadow: 0 0 50px var(--core); }
 
-        .pricing-grid { display: flex; justify-content: center; gap: 30px; padding: 40px; flex-wrap: wrap; perspective: 1000px; }
-        .tier-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.2); border-radius: 24px; padding: 45px; width: 310px; position: relative; transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); backdrop-filter: blur(20px); }
-        .tier-card:hover { transform: translateY(-15px) rotateY(5deg); border-color: var(--core); box-shadow: 0 0 50px rgba(0,242,255,0.2); }
-        .tier-card.featured { border: 1px solid var(--brand); }
-        .tier-name { font-family: 'Orbitron'; font-size: 13px; letter-spacing: 3px; color: #8fa3ad; margin-bottom: 10px; text-transform: uppercase; }
-        .price { font-size: 56px; font-weight: 700; margin: 15px 0; font-family: 'Orbitron'; color: white; }
-        .features { list-style: none; padding: 0; margin: 30px 0; text-align: left; min-height: 180px; }
-        .features li { margin-bottom: 15px; font-size: 17px; color: #cbd5e1; display: flex; align-items: center; gap: 12px; }
-        .features li::before { content: "◢"; color: var(--core); font-size: 10px; }
+        /* "WHAT WE DO" - Tactical Breakdown */
+        .what-we-do { max-width: 1000px; margin: 100px auto; padding: 0 40px; }
+        .section-header { text-align: center; font-family: 'Orbitron'; font-size: 12px; letter-spacing: 5px; color: var(--brand); margin-bottom: 60px; }
+        
+        .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .value-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 40px; transition: 0.3s; backdrop-filter: blur(10px); }
+        .value-card:hover { border-color: var(--core); box-shadow: 0 0 30px rgba(0,242,255,0.1); }
+        .value-icon { font-size: 30px; color: var(--core); margin-bottom: 20px; font-family: 'Orbitron'; }
+        
+        h3 { font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; color: white; margin: 0 0 15px 0; }
+        .value-card p { font-size: 17px; color: #94a3b8; line-height: 1.6; margin: 0; }
 
-        .btn { background: transparent; border: 1px solid var(--core); color: var(--core); padding: 20px; width: 100%; font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; text-align: center; box-sizing: border-box; }
-        .btn:hover { background: var(--core); color: black; box-shadow: 0 0 30px var(--core); }
-        .btn-brand { border-color: var(--brand); color: var(--brand); }
-        .btn-brand:hover { background: var(--brand); color: white; box-shadow: 0 0 40px var(--brand); }
-        .badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--brand); color: white; padding: 6px 16px; border-radius: 4px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; letter-spacing: 2px; }
-
-        .footer-deck { border-top: 1px solid rgba(0,242,255,0.1); padding: 60px 20px; text-align: center; background: rgba(0,0,0,0.3); }
-        .footer-links { display: flex; justify-content: center; gap: 30px; margin: 20px 0; }
-        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 12px; font-family: 'Orbitron'; letter-spacing: 1px; }
+        /* General Footer */
+        .footer { padding: 60px; text-align: center; font-size: 11px; font-family: 'Orbitron'; color: #475569; opacity: 0.6; border-top: 1px solid rgba(0,242,255,0.1); background: rgba(0,0,0,0.3); }
+        .footer a { color: #475569; text-decoration: none; margin: 0 15px; }
     </style>
 </head>
 <body>
     <div class="hero-bg"><div class="grid"></div></div>
+    
     <nav class="nav">
-        <a href="index.html" class="logo-wrap"><div class="logo-icon"></div><div class="logo-text">RESUMEPI_LOT™</div></a>
-        <a href="onboarding.html" class="btn" style="width: auto; padding: 10px 30px;">LOGIN</a>
+        <a href="index.html" class="logo-wrap">
+            <img src="pilot-mark.png" alt="ResumePi_lot Mark" class="logo-img">
+            <div class="logo-text">RESUMEPI_LOT™</div>
+        </a>
+        <div style="display:flex; gap:10px;">
+            <a href="contact.html" class="cta-btn" style="padding: 10px 20px; margin:0; font-size:10px; opacity:0.6; border-color: #333; color: #999;">SUPPORT</a>
+            <a href="onboarding.html" class="cta-btn" style="padding: 10px 25px; margin:0;">LOGIN</a>
+        </div>
     </nav>
+
     <div class="hero">
-        <h1>Bypass Recruiter <span>Sub-Space</span></h1>
-        <p style="font-size: 18px; color: #8fa3ad; max-width: 700px; margin: 0 auto; letter-spacing: 1px;">Quantum ATS deconstruction. Calibrate your profile for the 1% interview threshold.</p>
+        <h1>THE INTERVIEW <span>THRESHOLD</span></h1>
+        <p class="tagline">98% of profiles are grounded by Applicant Tracking Systems. We built the Quantum Tunnel to ensure your professional inserting. Stop building resumes. Start piloting careers.</p>
+        <a href="#what" class="cta-btn">DECONSTRUCT MY PROFILE</a>
     </div>
-    <div class="pricing-grid">
-        <div class="tier-card"><div class="tier-name">Tactical Scan</div><div class="price">₹199</div><ul class="features"><li>Quantum ATS Scoring</li><li>Hidden Keyword Identification</li><li>Hull Integrity Report</li><li>Single Destination Match</li></ul><a href="onboarding.html" class="btn">INITIALIZE SCAN</a></div>
-        <div class="tier-card featured"><div class="badge">STEALTH ACTIVE</div><div class="tier-name">Stealth Optimizer</div><div class="price">₹499</div><ul class="features"><li>All Tactical Features</li><li>JD Sub-Space Matcher</li><li>Auto-Keyword Injection</li><li>Recruiter Intent Analysis</li></ul><a href="onboarding.html" class="btn btn-brand">ACTIVATE STEALTH</a></div>
-        <div class="tier-card"><div class="tier-name">The Singularity</div><div class="price">₹999</div><ul class="features"><li>All Stealth Features</li><li>AI Biological Summary</li><li>Full Profile Deconstruction</li><li>Quantum Cover Letter</li><li>24hr Priority Link</li></ul><a href="onboarding.html" class="btn">GO SINGULARITY</a></div>
+
+    <div class="what-we-do" id="what">
+        <div class="section-header">THE PILOT PROTOCOL</div>
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-icon">01_</div>
+                <h3>Quantum ATS Tunneling</h3>
+                <p>We don't just 'optimise' keywords. Our engine deconstructs the Job Description and injects the precise scarcity vectors needed to bypass sub-space filters.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">02_</div>
+                <h3>Recruiter Intent Analysis</h3>
+                <p>We analyze the 'biological intent' of the job description. We align your profile not just with the words, but with the human desire behind them.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">03_</div>
+                <h3>Hull Integrity Overhaul</h3>
+                <p>A full profile deconstruction. From the Biological Summary to the final Link, we repair every structural gap to ensure the highest probability of Selection.</p>
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <a href="onboarding.html" class="cta-btn" style="border-color: var(--brand); color: var(--brand);">GO TO JUMP DECK</a>
+        </div>
     </div>
-    <footer class="footer-deck">
-        <div class="logo-text" style="font-size: 18px; margin-bottom: 10px;">RESUMEPI_LOT™</div>
-        <div class="footer-links"><a href="privacy.html">PRIVACY_PROTOCOL</a><a href="terms.html">TERMS_OF_ENGAGEMENT</a><a href="about.html">ABOUT</a><a href="contact.html">GROUND_CONTROL</a></div>
-        <div style="font-size: 11px; color: #334155; letter-spacing: 2px;">POWERED BY ALLIANCE BUSINESS SERVICES | © 2026</div>
+
+    <footer class="footer">
+        RESUMEPI_LOT | ALLIANCE BUSINESS SERVICES | HYPERSECURE UPLINK<br><br>
+        <a href="privacy.html">PRIVACY_PROTOCOL</a> | <a href="terms.html">TERMS</a> | <a href="about.html">ABOUT</a> | © 2026
     </footer>
 </body>
 </html>
