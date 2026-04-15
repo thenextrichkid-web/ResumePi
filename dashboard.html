@@ -8,206 +8,118 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000205; --dark-blue: #0a1321; --fail: #ff0055; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
-        
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; overflow-x: hidden; }
         .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--dark-blue) 0%, #000 100%); z-index: -1; }
-        .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; }
-
-        .top-nav { display: flex; justify-content: space-between; padding: 20px 40px; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.1); backdrop-filter: blur(20px); }
         
-        .logo-wrap { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .wings-logo { position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
-        .wing { position: absolute; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
-        .wing.l { transform: rotate(-45deg) translateX(-8px); opacity: 0.6; }
-        .wing.r { transform: rotate(45deg) translateX(8px); }
-        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: white; }
+        /* HEADER & LOGO */
+        .top-nav { display: flex; justify-content: space-between; padding: 15px 25px; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.1); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .wings-logo { position: relative; width: 35px; height: 25px; display: flex; align-items: center; justify-content: center; }
+        .wing { position: absolute; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 22px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
+        .wing.l { transform: rotate(-45deg) translateX(-6px); opacity: 0.6; }
+        .wing.r { transform: rotate(45deg) translateX(6px); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 14px; letter-spacing: 2px; color: white; }
 
-        .pilot-status { font-family: 'Orbitron'; font-size: 10px; color: var(--core); letter-spacing: 2px; text-align: right; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        @media (min-width: 768px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } .full-width { grid-column: 1 / -1; } }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; padding: 40px; max-width: 1300px; margin: 0 auto; }
-
-        .card { background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.1); border-radius: 24px; padding: 30px; backdrop-filter: blur(15px); transition: 0.3s; position: relative; }
-        .card:hover { border-color: var(--core); box-shadow: 0 0 30px rgba(0,242,255,0.1); }
-
-        .card-header { font-family: 'Orbitron'; font-size: 10px; color: var(--core); letter-spacing: 2px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
-
-        h2 { font-family: 'Orbitron'; font-size: 20px; margin: 0 0 15px 0; letter-spacing: 1px; }
-        .data-content { color: #94a3b8; font-size: 16px; line-height: 1.6; min-height: 100px; white-space: pre-wrap; }
-
-        .terminal-box { background: #000; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 13px; color: #10b981; margin-top: 15px; }
+        .card { background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
+        .card-header { font-family: 'Orbitron'; font-size: 9px; color: var(--core); letter-spacing: 2px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .terminal-box { background: #000; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 13px; color: #10b981; min-height: 100px; line-height: 1.4; overflow-y: auto; }
         .cursor { display: inline-block; width: 8px; height: 15px; background: #10b981; animation: blink 1s infinite; vertical-align: middle; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        .btn-prime { background: transparent; border: 1px solid var(--core); color: var(--core); padding: 15px; width: 100%; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 20px; letter-spacing: 2px; }
+        h2 { font-family: 'Orbitron'; font-size: 18px; margin: 0 0 10px 0; color: white; }
+        .data-content { color: #94a3b8; font-size: 15px; line-height: 1.6; white-space: pre-wrap; }
+        .btn-prime { background: transparent; border: 1px solid var(--core); color: var(--core); padding: 15px; width: 100%; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 15px; letter-spacing: 2px; }
         .btn-prime:hover { background: var(--core); color: black; box-shadow: 0 0 20px var(--core); }
         .btn-alt { border-color: var(--brand); color: var(--brand); }
-        .btn-alt:hover { background: var(--brand); color: white; box-shadow: 0 0 20px var(--brand); }
-        .btn-terminate { border-color: var(--fail); color: var(--fail); margin-top: 10px; }
-        .btn-terminate:hover { background: var(--fail); color: white; box-shadow: 0 0 20px var(--fail); }
-
-        #ai-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:100; align-items:center; justify-content:center; padding:20px; }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="hero-bg"><div class="grid"></div></div>
+    <div class="hero-bg"></div>
 
     <nav class="top-nav">
-        <div class="logo-wrap">
+        <a href="#" class="logo-wrap">
             <div class="wings-logo"><div class="wing l"></div><div class="wing r"></div></div>
             <div class="logo-text">RESUMEPI_LOT™</div>
-        </div>
-        <div class="pilot-status">
-            IDENTIFIER: <span id="pilot-id" style="color:white">--</span><br>
-            UPLINK: <span style="color:#10b981">ENCRYPTED</span>
-        </div>
+        </a>
+        <div style="font-family: 'Orbitron'; font-size: 9px; color: var(--core); text-align: right;" id="p-id">CALLSIGN: --</div>
     </nav>
 
     <main class="dashboard-grid">
         <div class="card">
-            <div class="card-header"><span>MOD_01 // BIO_SUMMARY</span> <div class="status-dot"></div></div>
-            <h2>Tactical Profile</h2>
-            <div class="data-content" id="bio-summary">
-                Initializing neural uplink... Reconstructing tactical vectors...
+            <div class="card-header"><span>MOD_01 // VECTOR_LOG</span></div>
+            <h2>System Diagnostics</h2>
+            <div class="terminal-box">
+                <div id="log-text"></div><span class="cursor"></span>
             </div>
-            <button class="btn-prime" onclick="copyText('bio-summary')">COPY TO CLIPBOARD</button>
+            <button class="btn-prime" onclick="location.reload()">REFRESH UPLINK</button>
         </div>
 
         <div class="card">
-            <div class="card-header"><span>MOD_02 // VECTOR_SCAN</span> <div class="status-dot"></div></div>
-            <h2>Keyword Integrity</h2>
-            <div class="terminal-box">
-                > INITIALIZING SCAN...<br>
-                <span id="log-content"></span><span class="cursor"></span>
+            <div class="card-header"><span>MOD_02 // INTEL_GAP</span> <span id="score-tag" style="color:var(--fail)">SCORE: --</span></div>
+            <h2>Armor Deficiencies</h2>
+            <div class="data-content" id="missing-vectors" style="color:var(--fail)">
+                > Analyzing intelligence gaps...
             </div>
-            <button class="btn-prime">RE-CALIBRATE VECTORS</button>
+            <button class="btn-prime" style="border-color:var(--fail); color:var(--fail)">VECTOR_SHIFT (KEYWORDS)</button>
         </div>
 
-        <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-header"><span>MOD_03 // ORBITAL_INSERTION</span> <div class="status-dot" style="background:var(--brand); box-shadow: 0 0 10px var(--brand);"></div></div>
-            <h2 style="color:var(--brand)">Deployment Ready</h2>
-            <p style="color: #94a3b8;">Your tactical assets have been fully reconstructed. Ready for orbital insertion into ATS-monitored environments.</p>
-            <div style="display:flex; flex-direction: column; gap: 10px;">
-                <div style="display:flex; gap: 20px;">
-                    <button class="btn-prime btn-alt" style="flex:1" onclick="generatePDF()">DOWNLOAD PDF REBUILD</button>
-                    <button class="btn-prime" style="flex:1" onclick="generateCoverLetter()">GENERATE COVER LETTER</button>
-                </div>
-                <button class="btn-prime btn-terminate" onclick="logout()">TERMINATE SESSION</button>
+        <div class="card full-width">
+            <div class="card-header"><span>MOD_03 // TACTICAL_SUMMARY</span></div>
+            <h2>Tactical Professional Dossier</h2>
+            <div class="data-content" id="bio-summary">Synchronizing neural reconstruct...</div>
+            <div style="display:flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                <button class="btn-prime btn-alt" style="flex:1" onclick="generatePDF()">DOWNLOAD DOSSIER (PDF)</button>
+                <button class="btn-prime" style="flex:1" onclick="generateCoverLetter()">GENERATE COVER LETTER</button>
             </div>
         </div>
     </main>
 
-    <div id="ai-modal">
-        <div class="card" style="max-width:600px; border-color:var(--core); background: #000;">
-            <div class="card-header"><span>AI_GENERATED_ASSET</span> <span onclick="closeModal()" style="cursor:pointer; color:var(--fail);">[CLOSE]</span></div>
-            <h2 id="modal-title">CALIBRATING AI...</h2>
-            <div class="terminal-box" id="letter-output" style="max-height:300px; overflow-y:auto; white-space: pre-wrap; color: #fff;">
-                Requesting uplink to Gemini AI...
-            </div>
-            <button class="btn-prime" onclick="copyText('letter-output')">COPY COVER LETTER</button>
-        </div>
-    </div>
-
-    <div id="resume-template" style="display: none; padding: 50px; color: black; background: white; font-family: Arial, sans-serif; line-height: 1.5;">
-        <h1 id="pdf-name" style="margin-bottom: 5px; text-transform: uppercase; border-bottom: 2px solid #000;">PILOT NAME</h1>
-        <p style="font-weight: bold; color: #444;">Strategic Tactical Profile</p>
-        <div style="margin-top: 20px;">
-            <h3>PROFESSIONAL SUMMARY</h3>
-            <p id="pdf-summary"></p>
-        </div>
-        <div style="margin-top: 20px; font-size: 10px; color: #888; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
-            Generated by ResumePi_lot™ Tactical Systems
-        </div>
-    </div>
-
     <script>
-        const name = localStorage.getItem('pilot_name') || "UNKN_ASSET";
         const email = localStorage.getItem('pilot_email');
-        const analysis = localStorage.getItem('full_analysis') || "Scan data synchronized. Manual reload required.";
+        const name = localStorage.getItem('pilot_name') || "Pilot";
 
-        // --- 1. THE SECURITY GATEKEEPER ---
-        (async function checkAccess() {
+        // Typing Effect
+        const logs = [
+            `> UPLINK ESTABLISHED FOR ${name.toUpperCase()}...`,
+            "> ANALYZING MISSION OBJECTIVES...",
+            "> STATUS: DEPLOYMENT READY."
+        ];
+        let line = 0;
+        function typeLog() {
+            if (line < logs.length) {
+                document.getElementById('log-text').innerHTML += logs[line] + "<br>";
+                line++;
+                setTimeout(typeLog, 1000);
+            }
+        }
+
+        (async function sync() {
             if (!email) { window.location.href = 'onboarding.html'; return; }
+            document.getElementById('p-id').innerText = `CALLSIGN: ${name.toUpperCase()}`;
+            typeLog();
 
-            const VERIFY_URL = "https://alliancebusiness.app.n8n.cloud/webhook/verify-pilot";
-            
             try {
-                const response = await fetch(VERIFY_URL, {
+                const response = await fetch("https://alliancebusiness.app.n8n.cloud/webhook/verify-pilot", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
                 const result = await response.json();
                 
-                if (result.status === "PAID") {
-                    // Update dashboard with real sheet data if available
-                    document.getElementById('bio-summary').innerText = result.summary || analysis;
-                    document.getElementById('pilot-id').innerText = (result.pilot_name || name).toUpperCase();
-                } else {
-                    window.location.href = 'onboarding.html';
-                }
-            } catch (e) {
-                console.warn("Intermittent uplink. Using localized cached data.");
-                document.getElementById('bio-summary').innerText = analysis;
-                document.getElementById('pilot-id').innerText = name.toUpperCase();
-            }
+                // Map Data to UI
+                document.getElementById('bio-summary').innerText = result.summary || "Summary synced.";
+                document.getElementById('missing-vectors').innerText = result.missing || "Analyzing intelligence gaps...";
+                document.getElementById('score-tag').innerText = `SCORE: ${result.score || '--'}`;
+                if (result.pilot_name) document.getElementById('p-id').innerText = `CALLSIGN: ${result.pilot_name.toUpperCase()}`;
+            } catch (e) { console.error("Sync Failure."); }
         })();
 
-        // TERMINAL EFFECT
-        const logs = ["> AUTHENTICATING PILOT...", "> ANALYZING ATS FILTERS...", "> INJECTING: AGILE LEADERSHIP", "> SCAN COMPLETE: 98% MATCH FOUND"];
-        let logIndex = 0;
-        function typeLog() {
-            if (logIndex < logs.length) {
-                const p = document.createElement('div');
-                p.innerText = logs[logIndex];
-                document.getElementById('log-content').appendChild(p);
-                logIndex++;
-                setTimeout(typeLog, 800);
-            }
-        }
-        window.onload = typeLog;
-
-        function copyText(id) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
-            alert("Asset copied to clipboard.");
-        }
-
-        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
-
-        function generatePDF() {
-            const summary = document.getElementById('bio-summary').innerText;
-            document.getElementById('pdf-name').innerText = document.getElementById('pilot-id').innerText;
-            document.getElementById('pdf-summary').innerText = summary;
-            const element = document.getElementById('resume-template');
-            element.style.display = 'block';
-            const opt = { margin: 1, filename: `ResumePilot_${name}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter' }};
-            html2pdf().set(opt).from(element).save().then(() => { element.style.display = 'none'; });
-        }
-
-        async function generateCoverLetter() {
-            const modal = document.getElementById('ai-modal');
-            const output = document.getElementById('letter-output');
-            modal.style.display = 'flex';
-            
-            const AI_URL = "https://alliancebusiness.app.n8n.cloud/webhook/generate-cover-letter";
-
-            try {
-                const response = await fetch(AI_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, summary: document.getElementById('bio-summary').innerText })
-                });
-                const data = await response.json();
-                document.getElementById('modal-title').innerText = "ASSET RECONSTRUCTED";
-                output.innerText = data.text || data.output || "Cover Letter generated successfully.";
-            } catch (e) {
-                output.innerText = "UPLINK ERROR: Ground Control offline.";
-            }
-        }
-
-        function closeModal() { document.getElementById('ai-modal').style.display = 'none'; }
+        function generatePDF() { alert("Building $100 Professional Dossier..."); }
+        function generateCoverLetter() { alert("Requesting AI Uplink..."); }
     </script>
 </body>
 </html>
