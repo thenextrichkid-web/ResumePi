@@ -70,7 +70,7 @@
             <div class="card-header"><span>MOD_01 // BIO_SUMMARY</span> <div class="status-dot"></div></div>
             <h2>Tactical Profile</h2>
             <div class="data-content" id="bio-summary">
-                Loading reconstructed bio...
+                "Initializing neural uplink... Extracting core trajectory vectors."
             </div>
             <button class="btn-prime" onclick="copyText('bio-summary')">COPY TO CLIPBOARD</button>
         </div>
@@ -142,7 +142,6 @@
                 const result = await response.json();
                 
                 if (result.status !== "PAID") {
-                    alert("UNAUTHORIZED ENTRY: Access requires PAID status.");
                     window.location.href = 'onboarding.html';
                 }
             } catch (e) {
@@ -150,12 +149,12 @@
             }
         })();
 
-        // INIT DATA
+        // INIT DATA FROM LOCAL STORAGE
         const name = localStorage.getItem('pilot_name') || "UNKN_ASSET";
-        const savedAnalysis = localStorage.getItem('full_analysis') || "Scan data not found. Please re-run Tactical Scan.";
+        const analysis = localStorage.getItem('full_analysis') || "Bio data not found. Please re-run Tactical Scan.";
         
         document.getElementById('pilot-id').innerText = name.toUpperCase();
-        document.getElementById('bio-summary').innerText = savedAnalysis;
+        document.getElementById('bio-summary').innerText = analysis;
 
         // TERMINAL EFFECT
         const logs = ["> AUTHENTICATING PILOT...", "> ANALYZING ATS FILTERS...", "> INJECTING: AGILE LEADERSHIP", "> SCAN COMPLETE: 98% MATCH FOUND"];
