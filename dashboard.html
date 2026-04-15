@@ -5,116 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight Deck | ResumePi_lot™</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000205; --glass: rgba(255, 255, 255, 0.03); }
+        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000205; --dark-blue: #0a1321; --fail: #ff0055; }
         body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
         
-        /* Grid Background */
-        .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1321 0%, #000 100%); z-index: -1; }
+        .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--dark-blue) 0%, #000 100%); z-index: -1; }
         .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); z-index: -1; }
 
-        /* Top Navigation */
         .top-nav { display: flex; justify-content: space-between; padding: 20px 40px; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.1); backdrop-filter: blur(20px); }
-        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .logo-icon { width: 25px; height: 25px; background: linear-gradient(135deg, var(--brand), var(--core)); clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%); }
-        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 2px; color: white; }
-
-        .pilot-info { font-family: 'Orbitron'; font-size: 10px; color: var(--core); letter-spacing: 2px; text-align: right; }
-
-        /* Dashboard Layout */
-        .dashboard-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 40px; max-width: 1200px; margin: 0 auto; }
-
-        .module { 
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.1); 
-            border-radius: 20px; padding: 30px; position: relative; backdrop-filter: blur(20px);
-            transition: 0.3s;
-        }
-        .module:hover { border-color: var(--core); box-shadow: 0 0 20px rgba(0,242,255,0.1); }
         
-        .module-header { font-family: 'Orbitron'; font-size: 12px; color: var(--core); letter-spacing: 2px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .status-tag { color: #10b981; font-size: 9px; border: 1px solid #10b981; padding: 2px 8px; border-radius: 4px; }
+        .logo-wrap { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .wings-logo { position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .wing { position: absolute; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
+        .wing.l { transform: rotate(-45deg) translateX(-8px); opacity: 0.6; }
+        .wing.r { transform: rotate(45deg) translateX(8px); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: white; }
 
-        h2 { font-size: 22px; margin: 0 0 15px 0; font-weight: 700; color: white; }
-        .content-area { color: #94a3b8; font-size: 16px; line-height: 1.6; }
+        .pilot-status { font-family: 'Orbitron'; font-size: 10px; color: var(--core); letter-spacing: 2px; text-align: right; }
 
-        /* Action Buttons */
-        .btn-action { 
-            background: transparent; border: 1px solid var(--core); color: var(--core); 
-            padding: 12px 20px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; 
-            margin-top: 20px; transition: 0.3s; width: 100%;
-        }
-        .btn-action:hover { background: var(--core); color: black; box-shadow: 0 0 15px var(--core); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; padding: 40px; max-width: 1300px; margin: 0 auto; }
 
-        /* Full Width Module */
-        .full-width { grid-column: 1 / -1; }
+        .card { background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.1); border-radius: 24px; padding: 30px; backdrop-filter: blur(15px); transition: 0.3s; position: relative; }
+        .card:hover { border-color: var(--core); box-shadow: 0 0 30px rgba(0,242,255,0.1); }
 
-        /* Highlight Text */
-        .highlight { color: var(--brand); font-weight: 700; }
+        .card-header { font-family: 'Orbitron'; font-size: 10px; color: var(--core); letter-spacing: 2px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+
+        h2 { font-family: 'Orbitron'; font-size: 20px; margin: 0 0 15px 0; letter-spacing: 1px; }
+        .data-content { color: #94a3b8; font-size: 16px; line-height: 1.6; min-height: 100px; white-space: pre-wrap; }
+
+        .terminal-box { background: #000; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 13px; color: #10b981; margin-top: 15px; }
+        .cursor { display: inline-block; width: 8px; height: 15px; background: #10b981; animation: blink 1s infinite; vertical-align: middle; }
+
+        .btn-prime { background: transparent; border: 1px solid var(--core); color: var(--core); padding: 15px; width: 100%; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 20px; letter-spacing: 2px; }
+        .btn-prime:hover { background: var(--core); color: black; box-shadow: 0 0 20px var(--core); }
+        .btn-alt { border-color: var(--brand); color: var(--brand); }
+        .btn-alt:hover { background: var(--brand); color: white; box-shadow: 0 0 20px var(--brand); }
+        .btn-terminate { border-color: var(--fail); color: var(--fail); margin-top: 10px; }
+        .btn-terminate:hover { background: var(--fail); color: white; box-shadow: 0 0 20px var(--fail); }
+
+        /* MODAL STYLE */
+        #ai-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:100; align-items:center; justify-content:center; padding:20px; }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="bg-overlay"><div class="grid"></div></div>
+    <div class="hero-bg"><div class="grid"></div></div>
 
     <nav class="top-nav">
-        <a href="index.html" class="logo-wrap">
-            <div class="logo-icon"></div>
+        <div class="logo-wrap">
+            <div class="wings-logo"><div class="wing l"></div><div class="wing r"></div></div>
             <div class="logo-text">RESUMEPI_LOT™</div>
-        </a>
-        <div class="pilot-info">
-            PILOT_STATUS: <span style="color: #10b981;">ACTIVE</span><br>
-            UPLINK_STRENGTH: 98.4%
+        </div>
+        <div class="pilot-status">
+            IDENTIFIER: <span id="pilot-id" style="color:white">--</span><br>
+            UPLINK: <span style="color:#10b981">ENCRYPTED</span>
         </div>
     </nav>
 
-    <div class="dashboard-container">
-        
-        <div class="module">
-            <div class="module-header">
-                <span>01_BIOLOGICAL_SUMMARY</span>
-                <span class="status-tag">OPTIMIZED</span>
+    <main class="dashboard-grid">
+        <div class="card">
+            <div class="card-header"><span>MOD_01 // BIO_SUMMARY</span> <div class="status-dot"></div></div>
+            <h2>Tactical Profile</h2>
+            <div class="data-content" id="bio-summary">
+                Loading reconstructed bio...
             </div>
-            <h2>AI Professional Profile</h2>
-            <div class="content-area">
-                "Results-driven <span class="highlight">Project Lead</span> with 5+ years of strategic expertise in real-estate marketing and digital lead generation. Specialized in deconstructing market intent and utilizing high-impact CTA strategies to drive direct sales growth. Proven track record in managing complex project lifecycles under tight orbital deadlines."
-            </div>
-            <button class="btn-action">COPY TO CLIPBOARD</button>
+            <button class="btn-prime" onclick="copyText('bio-summary')">COPY TO CLIPBOARD</button>
         </div>
 
-        <div class="module">
-            <div class="module-header">
-                <span>02_SCARCITY_KEYWORDS</span>
-                <span class="status-tag">FIXED</span>
+        <div class="card">
+            <div class="card-header"><span>MOD_02 // VECTOR_SCAN</span> <div class="status-dot"></div></div>
+            <h2>Keyword Integrity</h2>
+            <div class="terminal-box">
+                > INITIALIZING SCAN...<br>
+                <span id="log-content"></span><span class="cursor"></span>
             </div>
-            <h2>Missing Vectors Detected</h2>
-            <div class="content-area">
-                The following keywords were injected into your profile to bypass the recruiter sub-space filter:
-                <ul style="margin-top: 10px; color: var(--core); font-weight: 700;">
-                    <li>Stakeholder Optimization</li>
-                    <li>ROI Modeling</li>
-                    <li>Agile Methodology</li>
-                    <li>Strategic Vocation Mapping</li>
-                </ul>
-            </div>
-            <button class="btn-action">VIEW INTEGRATION MAP</button>
+            <button class="btn-prime">RE-CALIBRATE VECTORS</button>
         </div>
 
-        <div class="module full-width">
-            <div class="module-header">
-                <span>03_SINGULARITY_REBUILD</span>
-                <span class="status-tag" style="border-color: var(--brand); color: var(--brand);">SINGULARITY_ACTIVE</span>
-            </div>
-            <h2>Quantum Resume Rebuild</h2>
-            <p>Our AI has finished deconstructing your entire profile. Your new "Pilot-Grade" resume is ready for deployment.</p>
-            <div style="display: flex; gap: 20px; margin-top: 20px;">
-                <button class="btn-action" style="flex: 1; border-color: var(--brand); color: var(--brand);">DOWNLOAD PDF</button>
-                <button class="btn-action" style="flex: 1;">GENERATE COVER LETTER</button>
+        <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-header"><span>MOD_03 // ORBITAL_INSERTION</span> <div class="status-dot" style="background:var(--brand); box-shadow: 0 0 10px var(--brand);"></div></div>
+            <h2 style="color:var(--brand)">Deployment Ready</h2>
+            <p style="color: #94a3b8;">Your tactical assets have been fully reconstructed. Ready for orbital insertion into ATS-monitored environments.</p>
+            <div style="display:flex; flex-direction: column; gap: 10px;">
+                <div style="display:flex; gap: 20px;">
+                    <button class="btn-prime btn-alt" style="flex:1" onclick="generatePDF()">DOWNLOAD PDF REBUILD</button>
+                    <button class="btn-prime" style="flex:1" onclick="generateCoverLetter()">GENERATE COVER LETTER</button>
+                </div>
+                <button class="btn-prime btn-terminate" onclick="logout()">TERMINATE SESSION</button>
             </div>
         </div>
+    </main>
 
+    <div id="ai-modal">
+        <div class="card" style="max-width:600px; border-color:var(--core); background: #000;">
+            <div class="card-header"><span>AI_GENERATED_ASSET</span> <span onclick="closeModal()" style="cursor:pointer; color:var(--fail);">[CLOSE]</span></div>
+            <h2 id="modal-title">CALIBRATING AI...</h2>
+            <div class="terminal-box" id="letter-output" style="max-height:300px; overflow-y:auto; white-space: pre-wrap; color: #fff;">
+                Requesting uplink to Gemini AI...
+            </div>
+            <button class="btn-prime" onclick="copyText('letter-output')">COPY COVER LETTER</button>
+        </div>
     </div>
 
-    <footer style="text-align: center; padding: 40px; font-size: 11px; opacity: 0.3; font-family: Orbitron;">
-        ALLIANCE BUSINESS SERVICES | GROUND CONTROL UPLINK SECURE
-    </footer>
+    <div id="resume-template" style="display: none; padding: 50px; color: black; background: white; font-family: Arial, sans-serif; line-height: 1.5;">
+        <h1 id="pdf-name" style="margin-bottom: 5px; text-transform: uppercase; border-bottom: 2px solid #000;">PILOT NAME</h1>
+        <p style="font-weight: bold; color: #444;">Strategic Tactical Profile</p>
+        <div style="margin-top: 20px;">
+            <h3>PROFESSIONAL SUMMARY</h3>
+            <p id="pdf-summary"></p>
+        </div>
+        <div style="margin-top: 20px; font-size: 10px; color: #888; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+            Generated by ResumePi_lot™ Tactical Systems
+        </div>
+    </div>
+
+    <script>
+        // --- 1. THE SECURITY GATEKEEPER ---
+        (async function checkAccess() {
+            const email = localStorage.getItem('pilot_email');
+            if (!email) { 
+                window.location.href = 'onboarding.html'; 
+                return; 
+            }
+
+            const VERIFY_URL = "https://alliancebusiness.app.n8n.cloud/webhook/verify-pilot";
+            
+            try {
+                const response = await fetch(VERIFY_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                const result = await response.json();
+                
+                if (result.status !== "PAID") {
+                    alert("UNAUTHORIZED ENTRY: Access requires PAID status.");
+                    window.location.href = 'onboarding.html';
+                }
+            } catch (e) {
+                console.warn("Connection to Ground Control intermittent. Proceeding with caution.");
+            }
+        })();
+
+        // INIT DATA
+        const name = localStorage.getItem('pilot_name') || "UNKN_ASSET";
+        const savedAnalysis = localStorage.getItem('full_analysis') || "Scan data not found. Please re-run Tactical Scan.";
+        
+        document.getElementById('pilot-id').innerText = name.toUpperCase();
+        document.getElementById('bio-summary').innerText = savedAnalysis;
+
+        // TERMINAL EFFECT
+        const logs = ["> AUTHENTICATING PILOT...", "> ANALYZING ATS FILTERS...", "> INJECTING: AGILE LEADERSHIP", "> SCAN COMPLETE: 98% MATCH FOUND"];
+        let logIndex = 0;
+        function typeLog() {
+            if (logIndex < logs.length) {
+                const p = document.createElement('div');
+                p.innerText = logs[logIndex];
+                document.getElementById('log-content').appendChild(p);
+                logIndex++;
+                setTimeout(typeLog, 800);
+            }
+        }
+        window.onload = typeLog;
+
+        // UTILS
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            alert("Asset copied to clipboard.");
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // PDF GENERATION
+        function generatePDF() {
+            const summary = document.getElementById('bio-summary').innerText;
+            document.getElementById('pdf-name').innerText = name.toUpperCase();
+            document.getElementById('pdf-summary').innerText = summary;
+            const element = document.getElementById('resume-template');
+            element.style.display = 'block';
+            const opt = { margin: 1, filename: `ResumePilot_${name}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter' }};
+            html2pdf().set(opt).from(element).save().then(() => { element.style.display = 'none'; });
+        }
+
+        // AI COVER LETTER
+        async function generateCoverLetter() {
+            const modal = document.getElementById('ai-modal');
+            const output = document.getElementById('letter-output');
+            modal.style.display = 'flex';
+            
+            const AI_URL = "https://alliancebusiness.app.n8n.cloud/webhook/generate-cover-letter";
+
+            try {
+                const response = await fetch(AI_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, summary: document.getElementById('bio-summary').innerText })
+                });
+                const data = await response.json();
+                document.getElementById('modal-title').innerText = "ASSET RECONSTRUCTED";
+                output.innerText = data.output || data.text || JSON.stringify(data);
+            } catch (e) {
+                output.innerText = "UPLINK ERROR: Ensure n8n workflow is active.";
+            }
+        }
+
+        function closeModal() { document.getElementById('ai-modal').style.display = 'none'; }
+    </script>
 </body>
 </html>
