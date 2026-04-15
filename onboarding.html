@@ -9,108 +9,96 @@
         :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000105; }
         body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
         
-        /* Cinematic Background */
         .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1321 0%, #000 100%); z-index: -1; }
-        .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 60px 60px; transform: perspective(500px) rotateX(60deg); transform-origin: top; animation: moveGrid 20s linear infinite; }
-        @keyframes moveGrid { from { background-position: 0 0; } to { background-position: 0 600px; } }
-
-        /* Navigation */
-        .nav { display: flex; justify-content: center; padding: 30px; width: 100%; box-sizing: border-box; }
-        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .logo-img { width: 40px; height: auto; filter: drop-shadow(0 0 10px var(--core)); }
-        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: white; letter-spacing: 3px; }
-
-        /* Form Container */
-        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .container { 
-            width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 30px; 
-            padding: 50px; text-align: center; backdrop-filter: blur(20px); 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        h1 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 4px; color: var(--core); margin-bottom: 10px; }
+        .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 60px 60px; z-index: -1; }
         
-        .input-group { text-align: left; margin-bottom: 25px; }
-        label { font-family: 'Orbitron'; font-size: 10px; color: #8fa3ad; letter-spacing: 2px; display: block; margin-bottom: 10px; }
-        input { 
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,255,0.2); 
-            padding: 15px; border-radius: 12px; color: white; font-family: 'Rajdhani'; 
-            font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--core); background: rgba(0,242,255,0.1); }
+        /* LOGO STYLING MATCHED TO DASHBOARD */
+        .top-nav { display: flex; justify-content: center; padding: 40px 0; align-items: center; }
+        .logo-wrap { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .wings-logo { position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .wing { position: absolute; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
+        .wing.l { transform: rotate(-45deg) translateX(-8px); opacity: 0.6; }
+        .wing.r { transform: rotate(45deg) translateX(8px); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: white; }
 
-        .btn-jump { 
-            background: var(--core); color: black; border: none; padding: 20px; 
-            width: 100%; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; 
-            letter-spacing: 2px; border-radius: 14px; cursor: pointer; transition: 0.3s; 
-        }
-        .btn-jump:hover { box-shadow: 0 0 30px var(--core); transform: translateY(-2px); }
-
-        #vip-tag { 
-            display: none; color: var(--brand); font-family: 'Orbitron'; 
-            font-size: 10px; margin-top: 25px; letter-spacing: 1px; 
-            border: 1px solid var(--brand); padding: 10px; border-radius: 8px; 
-            background: rgba(255, 77, 0, 0.05); 
-        }
-
-        @keyframes moveGrid { from { background-position: 0 0; } to { background-position: 0 600px; } }
+        .onboarding-deck { width: 450px; margin: auto; padding: 50px; background: rgba(0, 5, 12, 0.9); border: 1px solid var(--core); border-radius: 40px; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1); text-align: center; position: relative; }
+        h1 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 4px; margin-bottom: 30px; color: white; text-transform: uppercase; }
+        
+        .input-box { width: 100%; padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 12px; color: white; font-family: 'Rajdhani'; font-size: 16px; margin-bottom: 20px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        .input-box:focus { border-color: var(--core); background: rgba(0, 242, 255, 0.05); }
+        
+        .btn-jump { width: 100%; padding: 20px; background: transparent; border: 1px solid var(--brand); color: var(--brand); font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 12px; transition: 0.3s; letter-spacing: 2px; text-transform: uppercase; }
+        .btn-jump:hover { background: var(--brand); color: white; box-shadow: 0 0 30px rgba(255, 77, 0, 0.4); }
+        #sub-msg { font-size: 11px; opacity: 0.5; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px; color: var(--core); }
     </style>
 </head>
 <body>
     <div class="hero-bg"><div class="grid"></div></div>
-
-    <nav class="nav">
-        <a href="index.html" class="logo-wrap">
-            <img src="pilot-mark.png" alt="Logo" class="logo-img">
+    
+    <nav class="top-nav">
+        <div class="logo-wrap">
+            <div class="wings-logo"><div class="wing l"></div><div class="wing r"></div></div>
             <div class="logo-text">RESUMEPI_LOT™</div>
-        </a>
+        </div>
     </nav>
 
-    <div class="main-content">
-        <div class="container">
-            <h1>PILOT_REGISTRATION</h1>
-            <p style="font-size: 14px; color: #8fa3ad; margin-bottom: 30px;">Initialize your tactical uplink.</p>
-            
-            <div class="input-group">
-                <label>ASSIGN_PILOT_NAME</label>
-                <input type="text" id="userName" placeholder="ENTER IDENTIFIER...">
-            </div>
-            <div class="input-group">
-                <label>SECURE_UPLINK_EMAIL</label>
-                <input type="email" id="userEmail" placeholder="COMM_CHANNEL@EMAIL.COM">
-            </div>
-            
-            <button class="btn-jump" onclick="beginHyperspace()">CREATE ACCOUNT & INITIALIZE JUMP</button>
-            
-            <div id="vip-tag">RESUMEAI_VIP_STATUS: ACTIVE (₹99 RATE APPLIED)</div>
-        </div>
+    <div class="onboarding-deck">
+        <h1>PILOT_REGISTRATION</h1>
+        <p style="font-size: 14px; opacity: 0.7; margin-bottom: 30px;">Initialize your tactical uplink to Ground Control.</p>
+        
+        <input type="text" id="userName" class="input-box" placeholder="PILOT_NAME" required>
+        <input type="email" id="userEmail" class="input-box" placeholder="UPLINK_EMAIL" required>
+        
+        <button id="regBtn" class="btn-jump" onclick="beginHyperspace()">INITIALIZE JUMP</button>
+        <p id="sub-msg">AWAITING INPUT...</p>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const isVIP = urlParams.get('source') === 'resumeai';
-        const passedName = urlParams.get('pilot');
-
-        if (isVIP) {
-            document.getElementById('vip-tag').style.display = 'block';
-            if (passedName) {
-                document.getElementById('userName').value = decodeURIComponent(passedName);
-            }
-        }
-
-        function beginHyperspace() {
+        async function beginHyperspace() {
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
+            const btn = document.getElementById('regBtn');
+            const msg = document.getElementById('sub-msg');
             
-            if(!name || !email) { 
-                alert("Pilot name and Secure Email required for uplink."); 
-                return; 
-            }
+            if(!name || !email) { alert("Pilot credentials required."); return; }
 
-            // Move to payment. If VIP, keep the amt=99 parameter
-            let target = isVIP ? `payment.html?amt=99&pilot=${encodeURIComponent(name)}` : `payment.html`;
-            window.location.href = target;
+            // Store for dashboard and gatekeeper usage
+            localStorage.setItem('pilot_name', name);
+            localStorage.setItem('pilot_email', email);
+
+            btn.style.opacity = "0.5";
+            btn.innerText = "INTERROGATING...";
+            msg.innerText = "CHECKING PILOT CLEARANCE...";
+
+            // n8n Verification Webhook URL (Matches your Dashboard logic)
+            const VERIFY_URL = "https://alliancebusiness.app.n8n.cloud/webhook/verify-pilot";
+            
+            try {
+                const response = await fetch(VERIFY_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                const result = await response.json();
+
+                if (result.status === "PAID") {
+                    btn.innerText = "ACCESS GRANTED";
+                    msg.innerText = "SYNC COMPLETE. JUMPING...";
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                } else if (result.status === "PENDING") {
+                    btn.innerText = "UPLINK PENDING";
+                    alert("FLIGHT PLAN PENDING: Your payment is being verified by Ground Control. Please wait 5-10 minutes.");
+                    window.location.href = 'payment.html';
+                } else {
+                    // New user or status not found in sheet
+                    window.location.href = 'payment.html';
+                }
+            } catch (e) {
+                console.error("Uplink Error", e);
+                // Fallback to payment page if server connection is lost
+                window.location.href = 'payment.html';
+            }
         }
     </script>
 </body>
