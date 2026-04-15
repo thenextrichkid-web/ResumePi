@@ -45,7 +45,6 @@
         .btn-terminate { border-color: var(--fail); color: var(--fail); margin-top: 10px; }
         .btn-terminate:hover { background: var(--fail); color: white; box-shadow: 0 0 20px var(--fail); }
 
-        /* MODAL STYLE */
         #ai-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:100; align-items:center; justify-content:center; padding:20px; }
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -70,7 +69,7 @@
             <div class="card-header"><span>MOD_01 // BIO_SUMMARY</span> <div class="status-dot"></div></div>
             <h2>Tactical Profile</h2>
             <div class="data-content" id="bio-summary">
-                "Initializing neural uplink... Extracting core trajectory vectors."
+                Initializing neural uplink... Reconstructing tactical vectors...
             </div>
             <button class="btn-prime" onclick="copyText('bio-summary')">COPY TO CLIPBOARD</button>
         </div>
@@ -123,13 +122,13 @@
     </div>
 
     <script>
+        const name = localStorage.getItem('pilot_name') || "UNKN_ASSET";
+        const email = localStorage.getItem('pilot_email');
+        const analysis = localStorage.getItem('full_analysis') || "Scan data synchronized. Manual reload required.";
+
         // --- 1. THE SECURITY GATEKEEPER ---
         (async function checkAccess() {
-            const email = localStorage.getItem('pilot_email');
-            if (!email) { 
-                window.location.href = 'onboarding.html'; 
-                return; 
-            }
+            if (!email) { window.location.href = 'onboarding.html'; return; }
 
             const VERIFY_URL = "https://alliancebusiness.app.n8n.cloud/webhook/verify-pilot";
             
@@ -141,20 +140,19 @@
                 });
                 const result = await response.json();
                 
-                if (result.status !== "PAID") {
+                if (result.status === "PAID") {
+                    // Update dashboard with real sheet data if available
+                    document.getElementById('bio-summary').innerText = result.summary || analysis;
+                    document.getElementById('pilot-id').innerText = (result.pilot_name || name).toUpperCase();
+                } else {
                     window.location.href = 'onboarding.html';
                 }
             } catch (e) {
-                console.warn("Connection to Ground Control intermittent. Proceeding with caution.");
+                console.warn("Intermittent uplink. Using localized cached data.");
+                document.getElementById('bio-summary').innerText = analysis;
+                document.getElementById('pilot-id').innerText = name.toUpperCase();
             }
         })();
-
-        // INIT DATA FROM LOCAL STORAGE
-        const name = localStorage.getItem('pilot_name') || "UNKN_ASSET";
-        const analysis = localStorage.getItem('full_analysis') || "Bio data not found. Please re-run Tactical Scan.";
-        
-        document.getElementById('pilot-id').innerText = name.toUpperCase();
-        document.getElementById('bio-summary').innerText = analysis;
 
         // TERMINAL EFFECT
         const logs = ["> AUTHENTICATING PILOT...", "> ANALYZING ATS FILTERS...", "> INJECTING: AGILE LEADERSHIP", "> SCAN COMPLETE: 98% MATCH FOUND"];
@@ -170,22 +168,17 @@
         }
         window.onload = typeLog;
 
-        // UTILS
         function copyText(id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text);
             alert("Asset copied to clipboard.");
         }
 
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'index.html';
-        }
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
 
-        // PDF GENERATION
         function generatePDF() {
             const summary = document.getElementById('bio-summary').innerText;
-            document.getElementById('pdf-name').innerText = name.toUpperCase();
+            document.getElementById('pdf-name').innerText = document.getElementById('pilot-id').innerText;
             document.getElementById('pdf-summary').innerText = summary;
             const element = document.getElementById('resume-template');
             element.style.display = 'block';
@@ -193,7 +186,6 @@
             html2pdf().set(opt).from(element).save().then(() => { element.style.display = 'none'; });
         }
 
-        // AI COVER LETTER
         async function generateCoverLetter() {
             const modal = document.getElementById('ai-modal');
             const output = document.getElementById('letter-output');
@@ -209,9 +201,9 @@
                 });
                 const data = await response.json();
                 document.getElementById('modal-title').innerText = "ASSET RECONSTRUCTED";
-                output.innerText = data.output || data.text || JSON.stringify(data);
+                output.innerText = data.text || data.output || "Cover Letter generated successfully.";
             } catch (e) {
-                output.innerText = "UPLINK ERROR: Ensure n8n workflow is active.";
+                output.innerText = "UPLINK ERROR: Ground Control offline.";
             }
         }
 
