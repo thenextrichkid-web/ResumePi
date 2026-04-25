@@ -3,32 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ground Control | ResumePi_lot™</title>
+    <title>Support Uplink | ResumePi_lot™</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --core: #00f2ff; --bg: #000105; --brand: #FF4D00; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #cbd5e1; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #111b27 0%, #000 100%); z-index: -1; }
-        .contact-deck { width: 500px; padding: 50px; background: rgba(0, 5, 12, 0.95); border: 1px solid var(--core); border-radius: 40px; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1); text-align: center; }
-        .logo-wrap { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px; text-decoration: none; }
-        .logo-icon { width: 25px; height: 25px; background: linear-gradient(135deg, var(--brand), var(--core)); clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%); }
-        h1 { font-family: 'Orbitron'; color: var(--core); font-size: 22px; letter-spacing: 4px; }
-        .contact-method { margin-bottom: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; transition: 0.3s; text-decoration: none; display: block; }
-        .contact-method:hover { background: rgba(0, 242, 255, 0.05); border-color: var(--core); }
-        .method-label { font-family: 'Orbitron'; font-size: 10px; color: var(--brand); letter-spacing: 2px; }
-        .method-value { font-size: 18px; color: white; font-weight: 700; display: block; margin-top: 5px; }
-        .btn-home { margin-top: 20px; display: block; color: var(--core); text-decoration: none; font-family: 'Orbitron'; font-size: 10px; letter-spacing: 2px; opacity: 0.5; }
+        :root { --core: #00f2ff; --brand: #FF4D00; --bg: #000105; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        
+        .hero-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1321 0%, #000 100%); z-index: -1; }
+        .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 60px 60px; z-index: -1; }
+        
+        .top-nav { display: flex; justify-content: center; padding: 40px 0; align-items: center; }
+        .logo-wrap { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .wings-logo { position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .wing { position: absolute; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
+        .wing.l { transform: rotate(-45deg) translateX(-8px); opacity: 0.6; }
+        .wing.r { transform: rotate(45deg) translateX(8px); }
+        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: white; }
+
+        .contact-deck { max-width: 550px; margin: 20px auto; padding: 50px; background: rgba(0, 5, 12, 0.9); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 20px; box-shadow: 0 0 50px rgba(0, 242, 255, 0.05); text-align: center; position: relative; backdrop-filter: blur(10px); }
+        h1 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 4px; margin-bottom: 10px; color: white; text-transform: uppercase; }
+        
+        .input-box, select, textarea { width: 100%; padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-family: 'Rajdhani'; font-size: 16px; margin-bottom: 20px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        .input-box:focus, select:focus, textarea:focus { border-color: var(--core); background: rgba(0, 242, 255, 0.05); box-shadow: 0 0 15px rgba(0,242,255,0.1); }
+        textarea { resize: vertical; min-height: 120px; }
+        option { background: var(--bg); color: white; }
+
+        .btn-jump { width: 100%; padding: 20px; background: transparent; border: 1px solid var(--core); color: var(--core); font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 8px; transition: 0.3s; letter-spacing: 2px; text-transform: uppercase; }
+        .btn-jump:hover { background: var(--core); color: black; box-shadow: 0 0 30px rgba(0, 242, 255, 0.4); }
+        
+        .btn-back { display: inline-block; margin-bottom: 20px; color: #94a3b8; text-decoration: none; font-family: 'Orbitron'; font-size: 10px; letter-spacing: 2px; transition: 0.3s; }
+        .btn-back:hover { color: var(--core); }
     </style>
 </head>
 <body>
-    <div class="bg-overlay"></div>
+    <div class="hero-bg"><div class="grid"></div></div>
+    
+    <nav class="top-nav">
+        <a href="index.html" class="logo-wrap">
+            <div class="wings-logo"><div class="wing l"></div><div class="wing r"></div></div>
+            <div class="logo-text">RESUMEPI_LOT™</div>
+        </a>
+    </nav>
+
     <div class="contact-deck">
-        <a href="index.html" class="logo-wrap"><div class="logo-icon"></div><div class="logo-text" style="color:white; font-family:Orbitron; font-weight:900;">RESUMEPI_LOT™</div></a>
-        <h1>GROUND CONTROL</h1>
-        <p>Experiencing system interference? Establish a direct uplink.</p>
-        <a href="mailto:support@alliance.com" class="contact-method"><span class="method-label">Email_Uplink</span><span class="method-value">support@alliance.com</span></a>
-        <a href="https://wa.me/YOUR_NUMBER" class="contact-method" target="_blank"><span class="method-label">Emergency_Comm</span><span class="method-value">WhatsApp Uplink</span></a>
-        <a href="index.html" class="btn-home">← DISCONNECT UPLINK</a>
+        <div style="text-align: left;"><a href="index.html" class="btn-back">← ABORT TO HOMEPAGE</a></div>
+        
+        <h1 style="color: var(--core);">TRANSMIT BRIEFING</h1>
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 30px;">Ground Control is standing by. Submit your tactical inquiry below and an operative will respond within 24 hours.</p>
+        
+        <input type="text" id="contactName" class="input-box" placeholder="PILOT_NAME" required>
+        <input type="email" id="contactEmail" class="input-box" placeholder="COMM_LINK (EMAIL)" required>
+        
+        <select id="contactType" required>
+            <option value="" disabled selected>SELECT INQUIRY TYPE</option>
+            <option value="Flight Deck Upgrade">Flight Deck Upgrade Assistance</option>
+            <option value="Technical Anomaly">Report Technical Anomaly (Bug)</option>
+            <option value="Account Clearance">Account / Clearance Inquiry</option>
+            <option value="Corporate Fleet">Corporate / Team Solutions</option>
+        </select>
+        
+        <textarea id="contactMessage" placeholder="ENTER MESSAGE PAYLOAD..." required></textarea>
+        
+        <button id="sendBtn" class="btn-jump" onclick="transmitMessage()">DISPATCH UPLINK</button>
     </div>
+
+    <div style="text-align: center; margin-top: 20px; font-family: 'Orbitron'; font-size: 10px; color: #475569; opacity: 0.6; letter-spacing: 2px;">POWERED BY AXONIC S.R.</div>
+
+    <script>
+        // Auto-fill if user is logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('pilot_name')) document.getElementById('contactName').value = localStorage.getItem('pilot_name');
+            if (localStorage.getItem('pilot_email')) document.getElementById('contactEmail').value = localStorage.getItem('pilot_email');
+        });
+
+        async function transmitMessage() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const type = document.getElementById('contactType').value;
+            const message = document.getElementById('contactMessage').value;
+            const btn = document.getElementById('sendBtn');
+
+            if (!name || !email || !type || !message) {
+                alert("INCOMPLETE PAYLOAD: All fields are required for transmission.");
+                return;
+            }
+
+            btn.innerText = "ENCRYPTING & TRANSMITTING...";
+            btn.style.opacity = "0.5";
+            btn.disabled = true;
+
+            try {
+                await fetch("https://alliancebusiness.app.n8n.cloud/webhook/contact", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, type, message, source: "ResumePi_lot" })
+                });
+                
+                btn.innerText = "TRANSMISSION SUCCESSFUL";
+                btn.style.background = "var(--core)";
+                btn.style.color = "black";
+            } catch (e) {
+                alert("UPLINK FAILED: Could not reach Ground Control. Please try again.");
+                btn.innerText = "DISPATCH UPLINK";
+                btn.style.opacity = "1";
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>

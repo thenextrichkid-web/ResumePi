@@ -76,28 +76,52 @@
 
         <a href="dashboard.html" style="color: var(--core); font-family: 'Orbitron'; font-size: 10px; text-decoration: none; margin-top: 20px; display: block; opacity: 0.3;">DEBUG: SKIP TO DASHBOARD</a>
     </div>
+    
+    <div style="text-align: center; margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: #475569; opacity: 0.6; letter-spacing: 2px;">POWERED BY AXONIC S.R.</div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const amt = urlParams.get('amt') || "999";
+        const tier = urlParams.get('tier');
         const upiID = "8309167536@seyes";
 
-        // VIP Mode UI Shift
-        if (amt === '99') {
-            document.getElementById('priceText').innerText = "₹99";
+        document.getElementById('priceText').innerText = "₹" + amt;
+
+        // Dynamic Tier Configuration Engine
+        const tierSettings = {
+            'vip': { title: 'VIP_UPLINK', color: 'var(--core)', status: 'ACTIVE' },
+            'recon': { title: 'TACTICAL_RECON', color: 'var(--core)', status: 'LOCKED' },
+            'orbital': { title: 'ORBITAL_JUMP', color: 'var(--core)', status: 'LOCKED' },
+            'flightdeck': { title: 'FLIGHT_DECK_COMMAND', color: 'var(--brand)', status: 'LOCKED' },
+            'apex': { title: 'QUANTUM_APEX', color: '#a8a29e', status: 'LOCKED' },
+            'default': { title: 'REPAIR_PROTOCOL', color: 'var(--fail)', status: '41%' }
+        };
+
+        const activeTier = tier || (amt === '99' ? 'vip' : 'default');
+        const config = tierSettings[activeTier];
+
+        // Apply Config Styles
+        document.querySelector('h1').innerText = config.title;
+        document.querySelector('h1').style.color = config.color;
+        document.querySelector('.damage-status').innerText = config.status;
+        document.querySelector('.damage-status').style.color = config.color;
+        document.querySelector('.repair-deck').style.borderColor = config.color;
+        document.querySelector('.warning-stripe').style.background = `repeating-linear-gradient(45deg, ${config.color}, ${config.color} 10px, #000 10px, #000 20px)`;
+        document.getElementById('priceText').style.color = config.color;
+        document.querySelectorAll('.wing').forEach(w => { w.style.borderBottomColor = config.color; w.style.filter = `drop-shadow(0 0 5px ${config.color})`; });
+        
+        const mainBtn = document.getElementById('mainBtn');
+        mainBtn.innerText = "AUTHORIZE " + (activeTier === 'default' || activeTier === 'vip' ? "REPAIR" : "UPGRADE");
+        mainBtn.style.background = config.color;
+        mainBtn.style.color = (config.color === 'var(--core)' || config.color === '#a8a29e') ? 'black' : 'white';
+        mainBtn.style.boxShadow = `0 10px 20px ${config.color}`;
+        
+        if (activeTier !== 'default') {
+            const note = document.getElementById('statusNote');
+            note.style.borderColor = config.color; note.style.color = config.color; note.style.background = 'rgba(255,255,255,0.05)';
+        }
+        if (amt === '99' || activeTier === 'vip') {
             document.getElementById('vip-alert').style.display = "block";
-            
-            // Switch colors to Blue (Core)
-            document.querySelector('.repair-deck').style.borderColor = "var(--core)";
-            document.querySelector('.warning-stripe').style.background = "repeating-linear-gradient(45deg, var(--core), var(--core) 10px, #000 10px, #000 20px)";
-            document.querySelector('h1').style.color = "var(--core)";
-            document.querySelectorAll('.wing').forEach(w => w.style.borderBottomColor = "var(--core)");
-            document.querySelectorAll('.wing').forEach(w => w.style.filter = "drop-shadow(0 0 5px var(--core))");
-            document.getElementById('mainBtn').style.background = "var(--core)";
-            document.getElementById('mainBtn').style.boxShadow = "0 10px 20px rgba(0,242,255,0.3)";
-            document.getElementById('mainBtn').style.color = "black";
-            document.getElementById('statusNote').style.borderColor = "rgba(0,242,255,0.3)";
-            document.getElementById('statusNote').style.color = "var(--core)";
         }
 
         function copyUPI(id) {

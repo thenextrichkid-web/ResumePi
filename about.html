@@ -17,12 +17,10 @@
 
         /* The New Logo Mark Styles */
         .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-icon { 
-            width: 30px; height: 30px; 
-            background: linear-gradient(135deg, var(--brand), var(--core)); 
-            clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%); 
-            box-shadow: 0 0 15px var(--core); 
-        }
+        .wings-logo { position: relative; width: 35px; height: 25px; display: flex; align-items: center; justify-content: center; }
+        .wing { position: absolute; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 22px solid var(--core); filter: drop-shadow(0 0 5px var(--core)); }
+        .wing.l { transform: rotate(-45deg) translateX(-6px); opacity: 0.6; }
+        .wing.r { transform: rotate(45deg) translateX(6px); }
         .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; letter-spacing: 3px; color: white; }
 
         .container { max-width: 850px; margin: 20px auto 80px; padding: 50px; background: rgba(255,255,255,0.02); border: 1px solid rgba(0,242,255,0.1); border-radius: 32px; backdrop-filter: blur(30px); position: relative; }
@@ -47,7 +45,10 @@
     <!-- Integrated Logo Header -->
     <header class="nav-header">
         <a href="index.html" class="logo-wrap">
-            <div class="logo-icon"></div>
+            <div class="wings-logo">
+                <div class="wing l"></div>
+                <div class="wing r"></div>
+            </div>
             <div class="logo-text">RESUMEPI_LOT™</div>
         </a>
     </header>
@@ -61,18 +62,18 @@
         <p>ResumePi_lot™ is not a simple resume builder. It is a <b>Tactical Career Uplink</b> designed to equalize the battlefield between human talent and algorithmic gatekeepers.</p>
         
         <div class="mission-stat">
-            <div class="stat-card"><b>98%</b>Recruiter Filter Rate</div>
+            <div class="stat-card"><b>90%</b>Recruiter Filter Rate</div>
             <div class="stat-card"><b>0.04s</b>Time spent per scan</div>
             <div class="stat-card"><b>1%</b>The Selection Threshold</div>
         </div>
 
         <h2>The Origin</h2>
-        <p>Engineered by <b>Alliance Business Services</b>, ResumePi_lot™ was born from the realization that great professionals are often grounded by subsurface ATS (Applicant Tracking System) errors. We developed the Quantum Tunneling engine to deconstruct Job Descriptions and inject the high-scarcity keywords needed for successful orbital insertion.</p>
+        <p>Engineered by <b>AXONIC S.R.</b>, ResumePi_lot™ was born from the realization that great professionals are often grounded by subsurface ATS (Applicant Tracking System) errors. We developed the Quantum Tunneling engine to deconstruct Job Descriptions and inject the high-scarcity keywords needed for successful orbital insertion.</p>
 
         <h2>Our Technology</h2>
         <p>Through our proprietary <b>A-Pilot Experience</b>, we utilize biological data mapping and intent deconstruction to ensure your profile is invisible to filters but undeniable to human recruiters.</p>
         
-        <p style="text-align: center; margin-top: 50px; opacity: 0.6; font-size: 12px; font-family: 'Orbitron';">ALLIANCE BUSINESS SERVICES | SECURING THE FUTURE OF VOCATION</p>
+        <p style="text-align: center; margin-top: 50px; opacity: 0.6; font-size: 12px; font-family: 'Orbitron';">AXONIC S.R. | SECURING THE FUTURE OF VOCATION</p>
     </div>
 </body>
 </html>

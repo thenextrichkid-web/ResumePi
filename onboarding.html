@@ -30,6 +30,12 @@
         .btn-jump { width: 100%; padding: 20px; background: transparent; border: 1px solid var(--brand); color: var(--brand); font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 12px; transition: 0.3s; letter-spacing: 2px; text-transform: uppercase; }
         .btn-jump:hover { background: var(--brand); color: white; box-shadow: 0 0 30px rgba(255, 77, 0, 0.4); }
         #sub-msg { font-size: 11px; opacity: 0.5; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px; color: var(--core); }
+
+        /* SJM Module Styling */
+        .sjm-option { width: 100%; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 8px; color: white; font-family: 'Rajdhani'; font-size: 15px; text-align: left; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
+        .sjm-option:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--core); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
+        .typing-text::after { content: '█'; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -42,7 +48,7 @@
         </div>
     </nav>
 
-    <div class="onboarding-deck">
+    <div class="onboarding-deck" id="auth-module">
         <h1>PILOT_REGISTRATION</h1>
         <p style="font-size: 14px; opacity: 0.7; margin-bottom: 30px;">Initialize your tactical uplink to Ground Control.</p>
         
@@ -53,7 +59,51 @@
         <p id="sub-msg">AWAITING INPUT...</p>
     </div>
 
+    <!-- SITUATIONAL JUDGMENT MATRIX (SJM) MODULE -->
+    <div class="onboarding-deck" id="sjm-module" style="display: none; width: 600px;">
+        <h1 id="sjm-title" style="color: var(--core);">NEURAL_TEST_INITIATED</h1>
+        <p id="sjm-desc" style="font-size: 14px; opacity: 0.7; margin-bottom: 25px;">Analyzing tactical decision-making matrices.</p>
+        
+        <div id="question-container" style="text-align: left; margin-bottom: 20px; min-height: 200px;">
+            <p id="q-text" class="typing-text" style="font-size: 16px; color: white; font-weight: bold; margin-bottom: 20px; line-height: 1.5;"></p>
+            <div id="options-container" style="display: none; flex-direction: column; gap: 10px;"></div>
+        </div>
+        <p id="sjm-progress" style="font-size: 11px; opacity: 0.5; font-family: 'Orbitron'; letter-spacing: 1px; color: var(--core);">0/3 COMPLETED</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px; font-family: 'Orbitron'; font-size: 10px; color: #475569; opacity: 0.6; letter-spacing: 2px;">POWERED BY AXONIC S.R.</div>
+
     <script>
+        // --- SJM DATA ---
+        const sjmQuestions = [
+            {
+                q: "CRITICAL EVENT: Your cross-functional team is missing a launch deadline by 48 hours due to a technical failure. Do you:",
+                options: [
+                    "A) Escalate immediately to stakeholders and request an extension.",
+                    "B) Reroute engineering resources to patch the critical path.",
+                    "C) Push the deadline, rewrite the roadmap, and accept the technical debt."
+                ]
+            },
+            {
+                q: "TEAM DYNAMICS: A high-performing individual is creating toxic friction within the squad. Do you:",
+                options: [
+                    "A) Isolate their tasks to minimize team interaction.",
+                    "B) Confront them directly with performance metrics vs cultural cost.",
+                    "C) Let management handle the behavioral intervention."
+                ]
+            },
+            {
+                q: "MARKET SHIFT: A competitor just launched a feature that makes your Q3 roadmap obsolete. Do you:",
+                options: [
+                    "A) Stay the course and focus on our core offering.",
+                    "B) Pivot the entire team to build a counter-feature immediately.",
+                    "C) Analyze their flaws and architect a superior V2 bypass."
+                ]
+            }
+        ];
+        let currentQ = 0;
+        let pilotAnswers = [];
+
         async function beginHyperspace() {
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
@@ -85,20 +135,103 @@
                 if (result.status === "PAID") {
                     btn.innerText = "ACCESS GRANTED";
                     msg.innerText = "SYNC COMPLETE. JUMPING...";
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                    setTimeout(() => { initiateSJM(); }, 1500); // Route to Neural Test instead of dashboard immediately
                 } else if (result.status === "PENDING") {
                     btn.innerText = "UPLINK PENDING";
                     alert("FLIGHT PLAN PENDING: Your payment is being verified by Ground Control. Please wait 5-10 minutes.");
                     window.location.href = 'payment.html';
                 } else {
-                    // New user or status not found in sheet
-                    window.location.href = 'payment.html';
+                    // New user (organic direct traffic) -> grant access to dashboard for 2 free scans
+                    btn.innerText = "GUEST UPLINK GRANTED";
+                    msg.innerText = "INITIALIZING FREE SCANS...";
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
                 }
             } catch (e) {
                 console.error("Uplink Error", e);
-                // Fallback to payment page if server connection is lost
-                window.location.href = 'payment.html';
+                alert("COMMUNICATION FAILURE: Unable to reach Ground Control. Please check your network connection.");
+                btn.innerText = "INITIALIZE JUMP";
+                btn.style.opacity = "1";
             }
+        }
+
+        function initiateSJM() {
+            document.getElementById('auth-module').style.display = 'none';
+            document.getElementById('sjm-module').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQ >= sjmQuestions.length) {
+                completeSJM();
+                return;
+            }
+            
+            const qText = document.getElementById('q-text');
+            const optionsContainer = document.getElementById('options-container');
+            document.getElementById('sjm-progress').innerText = `${currentQ}/3 COMPLETED`;
+            
+            optionsContainer.style.display = 'none';
+            optionsContainer.innerHTML = '';
+            qText.innerText = '';
+            
+            const fullText = sjmQuestions[currentQ].q;
+            let i = 0;
+            
+            // Typing effect for the question
+            const typing = setInterval(() => {
+                qText.innerText += fullText.charAt(i);
+                i++;
+                if (i >= fullText.length) {
+                    clearInterval(typing);
+                    qText.classList.remove('typing-text');
+                    
+                    // Load options
+                    sjmQuestions[currentQ].options.forEach((opt, index) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'sjm-option';
+                        btn.innerText = opt;
+                        btn.onclick = () => {
+                            pilotAnswers.push(index);
+                            currentQ++;
+                            qText.classList.add('typing-text');
+                            loadQuestion();
+                        };
+                        optionsContainer.appendChild(btn);
+                    });
+                    optionsContainer.style.display = 'flex';
+                }
+            }, 30);
+        }
+
+        async function completeSJM() {
+            const qText = document.getElementById('q-text');
+            const progress = document.getElementById('sjm-progress');
+            document.getElementById('options-container').style.display = 'none';
+            
+            qText.classList.add('typing-text');
+            qText.innerText = "NEURAL PROFILE COMPILED. SYNCING TO GROUND CONTROL...";
+            progress.innerText = "3/3 COMPLETED";
+            
+            localStorage.setItem('pilot_sjm_profile', JSON.stringify(pilotAnswers));
+            
+            const email = localStorage.getItem('pilot_email');
+            const name = localStorage.getItem('pilot_name');
+            
+            // Push SJM results to n8n to log into Sheet 2 (Pilot Leads) & map status
+            const SYNC_URL = "https://alliancebusiness.app.n8n.cloud/webhook/pilot-sjm-sync";
+            
+            try {
+                await fetch(SYNC_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, email: email, sjm_profile: pilotAnswers, source: "RESUME_AI_99", status: "SJM_COMPLETED" })
+                });
+            } catch (e) {
+                console.warn("Non-fatal telemetry error: Ground control offline.");
+            }
+            
+            qText.innerText = "SYNC COMPLETE. RE-ROUTING TO FLIGHT DECK...";
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
         }
     </script>
 </body>
