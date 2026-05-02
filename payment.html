@@ -3,144 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repair Protocol | ResumePi_lot™</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>ResumeAI — Deep Reconstruct</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --core: #00f2ff; --fail: #ff0055; --bg: #000105; --brand: #FF4D00; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
+        :root { --brand: #E8420A; }
+        body { font-family: 'DM Sans', sans-serif; background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%); color: white; margin: 0; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100vh; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
+        .card { background: rgba(15, 15, 25, 0.95); border: 1px solid rgba(232, 66, 10, 0.4); padding: 40px; border-radius: 32px; max-width: 450px; width: 90%; backdrop-filter: blur(15px); }
+        .shield-glow { font-size: 70px; filter: drop-shadow(0 0 25px rgba(232, 66, 10, 0.8)); margin-bottom: 20px; }
         
-        /* LOGO STYLING */
-        .top-nav { margin-bottom: 20px; }
-        .logo-wrap { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .wings-logo { position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
-        .wing { position: absolute; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 25px solid var(--fail); filter: drop-shadow(0 0 5px var(--fail)); transition: 0.3s; }
-        .wing.l { transform: rotate(-45deg) translateX(-8px); opacity: 0.6; }
-        .wing.r { transform: rotate(45deg) translateX(8px); }
-        .logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: white; }
+        .price-strike { font-size: 22px; color: #777; margin-right: 12px; position: relative; display: inline-block; transition: 0.5s; }
+        .price-strike.slashed::after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: #E8420A; transform: rotate(-15deg); }
+        .price-active { font-family: 'Instrument Serif'; font-size: 72px; color: var(--brand); opacity: 0; transform: translateY(10px); transition: 1s ease-out; }
+        .price-active.reveal { opacity: 1; transform: translateY(0); }
 
-        .repair-deck { width: 420px; background: rgba(0, 5, 12, 0.98); border: 2px solid var(--fail); border-radius: 40px; padding: 40px; text-align: center; position: relative; box-shadow: 0 0 50px rgba(255,0,85,0.2); transition: 0.3s; }
-        .warning-stripe { background: repeating-linear-gradient(45deg, var(--fail), var(--fail) 10px, #000 10px, #000 20px); height: 10px; position: absolute; top: 0; left: 0; width: 100%; border-radius: 40px 40px 0 0; transition: 0.3s; }
-        
-        h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--fail); letter-spacing: 3px; margin-top: 15px; transition: 0.3s; }
-        .damage-status { font-family: 'Orbitron'; font-size: 56px; margin: 10px 0; }
-        
-        .qr-frame { background: white; width: 220px; height: 220px; margin: 20px auto; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .qr-frame img { width: 100%; height: auto; border-radius: 4px; }
-        
-        .price-display { font-family: 'Orbitron'; font-size: 32px; color: var(--core); margin-bottom: 10px; }
-        
-        /* NOTIFICATION BOX */
-        .note-box { background: rgba(255, 0, 85, 0.1); border: 1px solid rgba(255, 0, 85, 0.3); padding: 15px; border-radius: 12px; font-size: 12px; color: #ff8e6e; margin-bottom: 20px; text-align: left; line-height: 1.4; }
-        
-        .btn-repair { background: var(--fail); color: white; border: none; padding: 22px; width: 100%; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 2px; cursor: pointer; border-radius: 14px; box-shadow: 0 10px 20px rgba(255,0,85,0.3); margin-bottom: 10px; transition: 0.3s; }
-        
-        .upi-copy { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; margin-bottom: 15px; font-family: monospace; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; }
-        
-        #vip-alert { color: var(--core); font-size: 11px; font-family: 'Orbitron'; margin-bottom: 15px; display: none; border: 1px solid var(--core); padding: 5px; border-radius: 4px; }
+        .note-box { background: rgba(232, 66, 10, 0.1); border: 1px solid rgba(232, 66, 10, 0.3); padding: 15px; border-radius: 12px; font-size: 11px; color: #ff8e6e; margin: 20px 0; line-height: 1.5; text-align: left; }
+        .qr-wrap { background: white; padding: 15px; border-radius: 20px; width: 160px; margin: 20px auto; }
+        .qr-wrap img { width: 100%; }
+
+        .btn-action { width: 100%; padding: 18px; background: var(--brand); color: white; border: none; border-radius: 14px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 13px; margin-top: 10px; }
+        .btn-whatsapp { background: #25D366; }
+        .upi-copy { background: rgba(255,255,255,0.05); border: 1px solid #333; padding: 12px; border-radius: 12px; margin: 10px 0; font-family: monospace; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; }
     </style>
 </head>
 <body>
-
-    <nav class="top-nav">
-        <div class="logo-wrap">
-            <div class="wings-logo"><div class="wing l"></div><div class="wing r"></div></div>
-            <div class="logo-text">RESUMEPI_LOT™</div>
-        </div>
-    </nav>
-
-    <div class="repair-deck">
-        <div class="warning-stripe"></div>
-        <h1>REPAIR_PROTOCOL</h1>
-        <div class="damage-status">41%</div>
-        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Integrity Failure. Manual Fuel Injection Required.</p>
+    <div class="card">
+        <div class="shield-glow">🛡️</div>
+        <h1 style="font-family:'Instrument Serif'; margin: 0;">Deep Reconstruct</h1>
         
-        <div class="note-box" id="statusNote">
-            <strong>NOTICE:</strong> If auto-UPI fails, copy the ID below or scan the QR. Send your screenshot to WhatsApp for instant verification.
+        <div style="display:flex; justify-content:space-between; gap: 15px; margin:20px 0;">
+            <div style="flex:1; background:rgba(255,255,255,0.05); padding:15px; border-radius:16px;">
+                <div style="font-size:10px; color:#777; letter-spacing:2px; margin-bottom:5px;">DOMESTIC (INR)</div>
+                <span class="price-strike slashed" style="font-size:16px;">₹999</span>
+                <div class="price-active reveal" style="font-size:42px;">₹299</div>
+            </div>
+            <div style="flex:1; background:rgba(255,255,255,0.05); padding:15px; border-radius:16px;">
+                <div style="font-size:10px; color:#777; letter-spacing:2px; margin-bottom:5px;">GLOBAL (USD)</div>
+                <span class="price-strike slashed" style="font-size:16px;">$149</span>
+                <div class="price-active reveal" style="font-size:42px;">$49</div>
+            </div>
         </div>
 
-        <div id="vip-alert">RESUMEAI_VIP_UPLINK: ACTIVE</div>
-        <div class="price-display" id="priceText">₹999</div>
-
-        <div class="qr-frame">
-            <img src="your_qr.png" alt="Scan to Pay">
+        <div class="note-box">
+            <strong>IMPORTANT:</strong> Secure international payments are processed via PayPal. Domestic payments via UPI. Once your transaction is complete, click <strong>WhatsApp</strong> to send your transaction receipt for instant PRO activation.
         </div>
 
+        <div class="qr-wrap"><img src="qr-code.jpg" alt="Scan to Pay"></div>
+
+        <button onclick="openPayPal()" class="btn-action" style="background:#0070ba;">SECURE CHECKOUT (PAYPAL)</button>
+        <button onclick="openUPI()" class="btn-action">UNLOCK PRO SCANS (UPI)</button>
+        
         <div class="upi-copy" onclick="copyUPI('8309167536@seyes')">
-            <span id="upi-val">8309167536@seyes</span>
-            <span style="color:var(--core)">COPY</span>
+            <span id="upi-val">8309167536@seyes</span><span style="color:var(--brand)">COPY ID</span>
         </div>
 
-        <button class="btn-repair" id="mainBtn" onclick="openUPI()">AUTHORIZE REPAIR</button>
-        
-        <button class="btn-repair" style="background:#25D366; box-shadow:0 10px 20px rgba(37,211,102,0.2);" onclick="sendWhatsApp()">CONFIRM VIA WHATSAPP</button>
-
-        <a href="dashboard.html" style="color: var(--core); font-family: 'Orbitron'; font-size: 10px; text-decoration: none; margin-top: 20px; display: block; opacity: 0.3;">DEBUG: SKIP TO DASHBOARD</a>
+        <button onclick="sendWhatsApp()" class="btn-action btn-whatsapp">WHATSAPP FOR CONFIRMATION</button>
+        <button onclick="verifyPayment()" class="btn-action" style="background: #1a1a1a; margin-top: 15px;">VERIFY ACTIVATION STATUS</button>
     </div>
-    
-    <div style="text-align: center; margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: #475569; opacity: 0.6; letter-spacing: 2px;">POWERED BY AXONIC S.R.</div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const amt = urlParams.get('amt') || "999";
-        const tier = urlParams.get('tier');
-        const upiID = "8309167536@seyes";
+        // Global Anti-Right-Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
 
-        document.getElementById('priceText').innerText = "₹" + amt;
-
-        // Dynamic Tier Configuration Engine
-        const tierSettings = {
-            'vip': { title: 'VIP_UPLINK', color: 'var(--core)', status: 'ACTIVE' },
-            'recon': { title: 'TACTICAL_RECON', color: 'var(--core)', status: 'LOCKED' },
-            'orbital': { title: 'ORBITAL_JUMP', color: 'var(--core)', status: 'LOCKED' },
-            'flightdeck': { title: 'FLIGHT_DECK_COMMAND', color: 'var(--brand)', status: 'LOCKED' },
-            'apex': { title: 'QUANTUM_APEX', color: '#a8a29e', status: 'LOCKED' },
-            'default': { title: 'REPAIR_PROTOCOL', color: 'var(--fail)', status: '41%' }
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('strike-p').classList.add('slashed');
+                document.getElementById('reveal-p').classList.add('reveal');
+            }, 1000);
         };
 
-        const activeTier = tier || (amt === '99' ? 'vip' : 'default');
-        const config = tierSettings[activeTier];
-
-        // Apply Config Styles
-        document.querySelector('h1').innerText = config.title;
-        document.querySelector('h1').style.color = config.color;
-        document.querySelector('.damage-status').innerText = config.status;
-        document.querySelector('.damage-status').style.color = config.color;
-        document.querySelector('.repair-deck').style.borderColor = config.color;
-        document.querySelector('.warning-stripe').style.background = `repeating-linear-gradient(45deg, ${config.color}, ${config.color} 10px, #000 10px, #000 20px)`;
-        document.getElementById('priceText').style.color = config.color;
-        document.querySelectorAll('.wing').forEach(w => { w.style.borderBottomColor = config.color; w.style.filter = `drop-shadow(0 0 5px ${config.color})`; });
-        
-        const mainBtn = document.getElementById('mainBtn');
-        mainBtn.innerText = "AUTHORIZE " + (activeTier === 'default' || activeTier === 'vip' ? "REPAIR" : "UPGRADE");
-        mainBtn.style.background = config.color;
-        mainBtn.style.color = (config.color === 'var(--core)' || config.color === '#a8a29e') ? 'black' : 'white';
-        mainBtn.style.boxShadow = `0 10px 20px ${config.color}`;
-        
-        if (activeTier !== 'default') {
-            const note = document.getElementById('statusNote');
-            note.style.borderColor = config.color; note.style.color = config.color; note.style.background = 'rgba(255,255,255,0.05)';
+        function openUPI() {
+            window.location.href = `upi://pay?pa=8309167536@seyes&pn=ResumeAI&am=299&cu=INR`;
         }
-        if (amt === '99' || activeTier === 'vip') {
-            document.getElementById('vip-alert').style.display = "block";
+        
+        function openPayPal() {
+            window.open("https://paypal.me/zapper2112/49.99", "_blank");
         }
 
         function copyUPI(id) {
             navigator.clipboard.writeText(id);
-            const val = document.getElementById('upi-val');
-            const oldText = val.innerText;
-            val.innerText = "COPIED TO CLIPBOARD";
-            setTimeout(() => { val.innerText = oldText; }, 2000);
-        }
-
-        function openUPI() {
-            const upiUrl = `upi://pay?pa=${upiID}&pn=ResumePi_lot&am=${amt}&cu=INR`;
-            window.location.href = upiUrl;
+            document.getElementById('upi-val').innerText = "COPIED!";
+            setTimeout(() => { document.getElementById('upi-val').innerText = id; }, 2000);
         }
 
         function sendWhatsApp() {
-            const name = localStorage.getItem('pilot_name') || "Pilot";
-            const text = encodeURIComponent(`Payment Confirmation for ${name}. I have completed the Repair Protocol.`);
-            window.location.href = `https://wa.me/918309167536?text=${text}`;
+            const pName = localStorage.getItem('pilot_name') || 'Pilot';
+            window.location.href = `https://wa.me/918309167536?text=Payment%20Done%20for%20${pName}.%20UTR:%20`;
+        }
+
+        async function verifyPayment() {
+            const email = localStorage.getItem('pilot_email');
+            if (!email) return alert("Pilot email not found. Please restart the process.");
+            
+            const btn = document.querySelector('button[onclick="verifyPayment()"]');
+            const originalText = btn.innerText;
+            btn.innerText = "VERIFYING UPLINK...";
+            
+            try {
+                const res = await fetch('https://drone-unleash-diving.ngrok-free.dev/webhook/verify-pilot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                const data = await res.json();
+                
+                if (data.status === "PAID") {
+                    btn.innerText = "ACCESS GRANTED. TRANSFERRING...";
+                    btn.style.background = "#10b981";
+                    if (!btn.disabled) {
+                        let currentPremium = parseInt(localStorage.getItem('premium_scans') || '0');
+                        localStorage.setItem('premium_scans', (currentPremium + 2).toString());
+                        btn.disabled = true; // Prevent multiple clicks
+                        setTimeout(() => { window.location.href = 'app.html'; }, 1500);
+                    }
+                } else {
+                    btn.innerText = originalText;
+                    alert("Status is still PENDING. If you completed the payment, please share the screenshot on WhatsApp and wait for the manual override.");
+                }
+            } catch (err) { btn.innerText = originalText; alert("Verification failed. Please try again."); }
         }
     </script>
 </body>
